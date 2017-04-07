@@ -28,7 +28,13 @@ module RailsAdmin
       end
 
       def history_for_object(abstract_model, object, query, sort, sort_reverse, all, page, per_page = (RailsAdmin::Config.default_items_per_page || 20))
-        history = where(table: abstract_model.to_s, item: object.id)
+        table = case abstract_model.table_name
+        when 'contests'
+          ['Admin::ResidentialProject', 'Admin::CommercialProject', 'Admin::DesignTimeProject', 'Admin::ClosedProject']
+        else
+          abstract_model.to_s
+        end
+        history = where(table: table, item: object.id.to_s)
         history_for_model_or_object(history, abstract_model, query, sort, sort_reverse, all, page, per_page)
       end
 
